@@ -9,7 +9,7 @@ import 'app/providers/providers_provider.dart';
 import 'app/providers/user_provider.dart';
 import 'common/utils/currency_utils.dart';
 
-GetIt locator = GetIt.instance();
+GetIt locator = GetIt.instance;
 
 locatorSetup() async {
   locator.registerSingleton<Dio>(Dio());
