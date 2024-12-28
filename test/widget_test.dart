@@ -7,10 +7,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:webinar/common/data/app_language.dart';
 
 import 'package:webinar/main.dart';
 
 void main() {
+  setUp(() {
+    GetIt.instance.registerSingleton<AppLanguage>(AppLanguage());
+  });
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
