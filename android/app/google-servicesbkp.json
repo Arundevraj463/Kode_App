@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "228355712948",
+    "project_id": "askanlms",
+    "storage_bucket": "askanlms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228355712948:android:b5ad4215b82d43516074e1",
+        "android_client_info": {
+          "package_name": "com.askanacademy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtdQX2Wp650nQMX1pj1WiUBIt-wkn_HmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
