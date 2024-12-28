@@ -9,13 +9,11 @@ import 'app/providers/providers_provider.dart';
 import 'app/providers/user_provider.dart';
 import 'common/utils/currency_utils.dart';
 
-GetIt locator = GetIt.instance;
+GetIt locator = GetIt.instance();
 
-
-locatorSetup()async{
-
+locatorSetup() async {
   locator.registerSingleton<Dio>(Dio());
-  
+
   locator.registerSingleton<AppLanguage>(AppLanguage());
   locator.registerSingleton<CurrencyUtils>(CurrencyUtils());
   // locator.registerSingleton<AdvancedDrawerController>(AdvancedDrawerController());
@@ -27,7 +25,4 @@ locatorSetup()async{
   locator.registerSingleton<ProvidersProvider>(ProvidersProvider());
   locator.registerSingleton<UserProvider>(UserProvider());
   locator.registerSingleton<DrawerProvider>(DrawerProvider());
-  
-  
-
 }
