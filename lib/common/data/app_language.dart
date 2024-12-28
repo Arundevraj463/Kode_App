@@ -2,9 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../app/widgets/authentication_widget/country_code_widget/code_country.dart';
 import '../../config/assets.dart';
 
-class AppLanguage{
-  
-  late String currentLanguage;
+class AppLanguage {
+  late String currentLanguage = 'en';
   List<String> rtlLanguage = ['ar'];
 
   bool isRtl() => rtlLanguage.contains(currentLanguage.toLowerCase());
@@ -16,7 +15,6 @@ class AppLanguage{
       dialCode: '+1',
       flagUri: '${AppAssets.flags}${"en".toLowerCase()}.png',
     ),
-
     CountryCode(
       name: "Arabic",
       code: "AR",
@@ -32,10 +30,9 @@ class AppLanguage{
     return true;
   }
 
-  Future getLanguage() async {    
+  Future getLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     currentLanguage = prefs.getString('language') ?? 'en';
     return currentLanguage;
   }
-
 }
