@@ -100,7 +100,7 @@ class _SplashPageState extends State<SplashPage>
                         );
                       }),
                 ),
-                Container(
+                SizedBox(
                   height: getSize().height * 0.8,
                   child: Center(child: SvgPicture.asset(AppAssets.logoLineSvg)),
                 ),
