@@ -45,8 +45,8 @@ jobs:
       run: flutter test
       continue-on-error: true
 
-  # Build APK (Release)
-  android_build:
+  # Publish to Google Play Store
+  android_publish:
     runs-on: ubuntu-latest
     needs: build_and_test
     if: success()
@@ -80,25 +80,20 @@ jobs:
       run: flutter pub get
 
     - name: Build APK (Release)
-      run: flutter build apk --release
-
-  # Publish to Google Play Store
-  android_publish:
-    runs-on: ubuntu-latest
-    needs: android_build
-    if: success()
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      run: flutter build appbundle --release --no-tree-shake-icons
+    
+    - name: Authenticate with Google Play
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
     - name: Upload to Google Play
-      uses: r0adkll/upload-google-play-release-action@v1
+      uses: r0adkll/sign-android-release@v1
       with:
         service_account_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         package_name: com.askantechkode  # Replace with your app package name
-        release_file: build/app/outputs/flutter-apk/app-release.apk
-        track: alpha  # Change to 'beta', 'production', etc., as required
+        release_file: build/app/outputs/bundle/release/app-release.aab
+        track: production  # Change to 'beta', 'production', etc., as required
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
