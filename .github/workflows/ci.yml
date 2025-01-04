@@ -42,7 +42,7 @@ jobs:
       run: flutter build apk --release
 
     - name: Build iOS (Release)
-      run: flutter build ios --release --no-codesign
+      run: flutter build ios --no-codesign
 
   # Publish to Google Play Store
   android_publish:
@@ -57,7 +57,7 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.0.0'
+        flutter-version: '3.24.5'
 
     - name: Install dependencies
       run: flutter pub get
@@ -107,4 +107,3 @@ jobs:
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         FASTLANE_PASSWORD: ${{ secrets.APP_STORE_PASSWORD }}
-        
