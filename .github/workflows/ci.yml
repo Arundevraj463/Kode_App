@@ -33,7 +33,10 @@ jobs:
         channel: 'stable'
         architecture: X64
         cache: false
-        dry-run: true
+        dry-run: false
+        
+    - name: Verify Flutter installation
+      run: flutter --version
 
     - name: Install dependencies
       run: flutter pub get
