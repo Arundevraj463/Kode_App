@@ -82,8 +82,8 @@ jobs:
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
       
-#    - name: Decode service account key
-#      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
+#   - name: Decode service account key
+#     run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
     
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
