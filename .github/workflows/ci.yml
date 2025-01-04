@@ -117,7 +117,9 @@ jobs:
         
     - name: Set up App Store Connect API Key
       run: |
+        mkdir -p $HOME/ios  # Create the directory if it doesn't exist
         echo "$APP_STORE_CONNECT_API_KEY" > $HOME/ios/AuthKey.p8  # Save the secret to a file
+      shell: /bin/bash
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
