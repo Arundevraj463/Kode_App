@@ -114,6 +114,12 @@ jobs:
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.24.5'
+        
+    - name: Set up App Store Connect API Key
+      run: |
+        echo "$APP_STORE_CONNECT_API_KEY" > $HOME/ios/AuthKey.p8  # Save the secret to a file
+      env:
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
     - name: Install dependencies
       run: flutter pub get
@@ -126,6 +132,12 @@ jobs:
 
     - name: Build iOS (Release)
       run: flutter build ios --no-codesign  # Add --no-codesign flag to skip codesigning if needed
+
+    - name: Clone Certificates Repo
+      run: |
+        git clone https://$MY_GITHUB_TOKEN@github.com/devaaskan/Kode_App.git /path/to/clone
+      env:
+        MY_GITHUB_TOKEN: ${{ secrets.MATCH_PASSWORD }}
 
     - name: Set up fastlane
       run: |
@@ -146,5 +158,6 @@ jobs:
         fastlane gym --scheme Runner --export_method app-store # Ensures signing during the build process
         fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
       env:
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.p8
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
