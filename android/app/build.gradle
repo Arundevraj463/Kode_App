@@ -47,11 +47,17 @@ android {
     }
 
     signingConfigs {
+//        release {
+//            keyAlias 'my-key-alias'
+//            keyPassword '123456'
+//            storeFile file('my-release-key.keystore')
+//            storePassword '123456'
+//        }
         release {
-            keyAlias 'my-key-alias'
-            keyPassword '123456'
+            keyAlias 'your-key-alias'
+            keyPassword '463374'
             storeFile file('my-release-key.keystore')
-            storePassword '123456'
+            storePassword '463374'
         }
     }
     
