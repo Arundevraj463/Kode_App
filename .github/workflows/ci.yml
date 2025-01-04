@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distribution: 'temurin'
+        Distribution: 'temurin'
         architecture: 'x64'
         java-package: 'jdk'
         check-latest: false
@@ -38,11 +38,11 @@ jobs:
       run: flutter test
       continue-on-error: true
 
+    - name: Build iOS (Release)
+      run: flutter build ios --release
+
     - name: Build APK (Release)
       run: flutter build apk --release
-
-    - name: Build iOS (Release)
-      run: flutter build ios --no-codesign
 
   # Publish to Google Play Store
   android_publish:
@@ -88,21 +88,30 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.0.0'
+        flutter-version: '3.24.5'
 
     - name: Install dependencies
       run: flutter pub get
 
     - name: Build iOS (Release)
-      run: flutter build ios --release --no-codesign
+      run: flutter build ios --release
 
     - name: Set up fastlane
       run: |
         gem install fastlane
         fastlane --version
+   
+    - name: Fastlane match (Sign iOS app)
+      run: |
+        fastlane match appstore # For App Store distribution
+
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
 
     - name: Build and Upload to App Store
       run: |
+	      fastlane gym --scheme Runner --export_method app-store # Ensures signing during the build process
         fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
