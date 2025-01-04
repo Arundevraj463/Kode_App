@@ -81,21 +81,24 @@ jobs:
 
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
+      
+    - name: Decode service account key
+      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
     
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        credentials_json: /tmp/service-account-key.json
 
     - name: Upload to Google Play
       uses: r0adkll/sign-android-release@v1
       with:
-        service_account_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        service_account_json: /tmp/service-account-key.json
         package_name: com.askantechkode  # Replace with your app package name
         release_file: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account-key.json
 
   # Publish to App Store (iOS)
   ios_publish:
@@ -136,6 +139,7 @@ jobs:
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and Upload to App Store
       run: |
