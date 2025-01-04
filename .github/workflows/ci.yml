@@ -111,7 +111,7 @@ jobs:
 
     - name: Build and Upload to App Store
       run: |
-	      fastlane gym --scheme Runner --export_method app-store # Ensures signing during the build process
+        fastlane gym --scheme Runner --export_method app-store # Ensures signing during the build process
         fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
