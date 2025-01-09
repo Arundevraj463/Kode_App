@@ -76,15 +76,18 @@ jobs:
     - name: Verify Flutter installation
       run: flutter --version
 
+    - name: Clean Flutter project
+      run: flutter clean
+
     - name: Install dependencies
       run: flutter pub get
 
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
-      
-#   - name: Decode service account key
-#     run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
-    
+
+    - name: Decode service account key
+      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
+
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
@@ -93,12 +96,12 @@ jobs:
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
       with:
-        serviceAccountJson: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
-        packageName: com.askantechkode  # Replace with your app package name
+        serviceAccountJson: /tmp/service-account-key.json
+        packageName: com.askantechkode  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account-key.json
 
   # Publish to App Store (iOS)
   ios_publish:
@@ -131,6 +134,9 @@ jobs:
       
     - name: Check Swift version
       run: swift --version
+
+    - name: Select Xcode Version
+      run: sudo xcode-select -s /Applications/Xcode_15.app
 
     - name: Build iOS (Release)
       run: flutter build ios --no-codesign  # Add --no-codesign flag to skip codesigning if needed
