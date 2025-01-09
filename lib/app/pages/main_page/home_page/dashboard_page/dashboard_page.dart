@@ -658,12 +658,16 @@ class _DashboardPageState extends State<DashboardPage> {
       default:
     }
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: Text(
-        text ?? '-',
-        style: style10Regular().copyWith(),
-      ),
+    // return SideTitleWidget(
+    //   axisSide: meta.axisSide,
+    //   child: Text(
+    //     text ?? '-',
+    //     style: style10Regular().copyWith(),
+    //   ),
+    // );
+    return Text(
+      text ?? '-',
+      style: style10Regular().copyWith(),
     );
   }
 

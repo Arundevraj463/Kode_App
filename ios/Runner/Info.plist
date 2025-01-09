@@ -103,7 +103,7 @@
 		<key>NSMicrophoneUsageDescription</key>
 		<string>This app requires Mic permission.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Choose a photo to create an ad</string>
+		<string>We need access to your photo library to allow you to upload or set your profile picture. Your selected photos will be used solely for this purpose.</string>
 		<key>NSSpeechRecognitionUsageDescription</key>
 		<string>This example recognizes words as you speak them and displays them.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>

@@ -399,11 +399,28 @@ class _SettingPageState extends State<SettingPage>
                         isLoading = true;
                       });
 
-                      if (phoneController.text
-                          .trim()
-                          .toEnglishDigit()
-                          .isEmpty) {
-                        showSnackBar(ErrorEnum.alert, 'Phone Field is Empty');
+                      if (emailController.text
+                              .trim()
+                              .toEnglishDigit()
+                              .isEmpty ||
+                          nameController.text.trim().toEnglishDigit().isEmpty ||
+                          phoneController.text
+                              .trim()
+                              .toEnglishDigit()
+                              .isEmpty) {
+                        var errtext = (emailController.text
+                                .trim()
+                                .toEnglishDigit()
+                                .isEmpty
+                            ? 'Email'
+                            : (nameController.text
+                                    .trim()
+                                    .toEnglishDigit()
+                                    .isEmpty
+                                ? 'Name'
+                                : 'Phone'));
+                        showSnackBar(
+                            ErrorEnum.alert, errtext + ' Field is Empty');
                         setState(() {
                           isLoading = false;
                         });
