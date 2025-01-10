@@ -141,9 +141,16 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
+      working-directory: ${{ github.workspace }}
             
     - name: Clean Flutter project
       run: flutter clean
+    
+    - name: Debug Generated Files
+      run: |
+        echo "Checking Flutter Directory:"
+        ls -la ios/Flutter
+        echo "Generated.xcconfig should be in ios/Flutter"
     
     - name: Install CocoaPods
       run: brew install cocoapods || echo "CocoaPods already installed"
