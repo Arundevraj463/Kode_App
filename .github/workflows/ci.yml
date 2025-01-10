@@ -42,6 +42,12 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
+      
+    - name: Check outdated dependencies
+      run: flutter pub outdated
+
+    - name: Upgrade dependencies
+      run: flutter pub upgrade
 
     - name: Run tests
       run: flutter test
@@ -120,8 +126,8 @@ jobs:
         flutter-version: '3.24.5'
 
     - name: Remove cached dependencies
-      run: rm -rf ~/.pub-cache
-        
+      run: flutter pub cache clean
+
     # - name: Set up App Store Connect API Key
     #   run: |
     #     mkdir -p $HOME/ios  # Create the directory if it doesn't exist
@@ -137,7 +143,9 @@ jobs:
       run: flutter clean
     
     - name: Install CocoaPods
-      run: sudo gem install cocoapods
+      run: |
+        brew install cocoapods || echo "CocoaPods already installed"
+        pod install
 
     - name: Pod Repo Update
       run: pod repo update
@@ -151,7 +159,7 @@ jobs:
         xcode-version: '15'
 
     - name: Build iOS (Release)
-      run: flutter build ios --no-codesign --verbose  # Add --no-codesign flag to skip codesigning if needed
+      run: flutter build ios --release --no-codesign --verbose  # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |
