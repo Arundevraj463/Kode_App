@@ -110,7 +110,7 @@ jobs:
         packageName: com.askantechkode  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
-        status: inProgress
+        status: completed
       # env:
       #   GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account-key.json
 
@@ -142,15 +142,14 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
-      working-directory: ${{ github.workspace }}
 
     - name: Verify Generated.xcconfig
       run: |
         echo "Checking for Generated.xcconfig..."
         ls -la ios/Flutter
         if [ ! -f ios/Flutter/Generated.xcconfig ]; then
-          echo "Error: Generated.xcconfig is missing. Ensure flutter pub get is working correctly."
-          exit 1
+          echo "Error: Generated.xcconfig is missing. Running build_runner..."
+          flutter pub run build_runner build
         fi
             
     - name: Clean Flutter project
@@ -162,18 +161,22 @@ jobs:
     #     ls -la ios/Flutter
     #     echo "Generated.xcconfig should be in ios/Flutter"
     
-    - name: Install CocoaPods
-      run: brew install cocoapods || echo "CocoaPods already installed"
+    - name: Install Required CocoaPods Version
+      run: |
+        COCOAPODS_VER=$(sed -n -e 's/^COCOAPODS: \([0-9.]*\)/\1/p' ios/Podfile.lock)
+        echo "Installing CocoaPods version $COCOAPODS_VER"
+        sudo gem install cocoapods -v $COCOAPODS_VER
     
     - name: Debug Directory
       run: |
         echo "Current Directory: $(pwd)"
         ls -la ios
     
-    - name: Install Pods
+    - name: Reinstall Pods
       working-directory: ios
       run: |
-        pod install || pod repo update && pod install
+        rm -rf Pods Podfile.lock
+        pod install --repo-update
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
