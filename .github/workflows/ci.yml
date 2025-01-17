@@ -142,15 +142,24 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
       working-directory: ${{ github.workspace }}
+
+    - name: Verify Generated.xcconfig
+      run: |
+        echo "Checking for Generated.xcconfig..."
+        ls -la ios/Flutter
+        if [ ! -f ios/Flutter/Generated.xcconfig ]; then
+          echo "Error: Generated.xcconfig is missing. Ensure flutter pub get is working correctly."
+          exit 1
+        fi
             
     - name: Clean Flutter project
       run: flutter clean
     
-    - name: Debug Generated Files
-      run: |
-        echo "Checking Flutter Directory:"
-        ls -la ios/Flutter
-        echo "Generated.xcconfig should be in ios/Flutter"
+    # - name: Debug Generated Files
+    #   run: |
+    #     echo "Checking Flutter Directory:"
+    #     ls -la ios/Flutter
+    #     echo "Generated.xcconfig should be in ios/Flutter"
     
     - name: Install CocoaPods
       run: brew install cocoapods || echo "CocoaPods already installed"
