@@ -91,11 +91,9 @@ jobs:
         ls -la ios/Flutter
         if [ ! -f ios/Flutter/Generated.xcconfig ]; then
           echo "Error: Generated.xcconfig is missing. Running build_runner..."
-          flutter pub run build_runner build
+          flutter pub get
+          flutter build ios --no-codesign
         fi
-            
-    - name: Clean Flutter project
-      run: flutter clean
     
     # - name: Debug Generated Files
     #   run: |
@@ -119,6 +117,9 @@ jobs:
       run: |
         rm -rf Pods Podfile.lock
         pod install --repo-update
+
+    - name: Clean Flutter project
+      run: flutter clean
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
