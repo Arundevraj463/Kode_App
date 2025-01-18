@@ -129,6 +129,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Clone Certificates Repo
+      run: |
+        mkdir -p ./kode_app_cert_repo
+        git clone https://$GITHUB_TOKEN@github.com/devaaskan/Kode_App.git ./kode_app_cert_repo
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -137,13 +144,6 @@ jobs:
     - name: Remove cached dependencies
       run: flutter pub cache clean
 
-    # - name: Set up App Store Connect API Key
-    #   run: |
-    #     mkdir -p $HOME/ios  # Create the directory if it doesn't exist
-    #     echo "$APP_STORE_CONNECT_API_KEY" > $HOME/ios/AuthKey.p8  # Save the secret to a file
-    #   shell: bash
-    #   env:
-    #     APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
     - name: Set up App Store Connect API Key
       run: |
         mkdir -p $HOME/ios  # Create directory for the API key
@@ -162,12 +162,6 @@ jobs:
           flutter pub get
           flutter build ios --no-codesign
         fi
-    
-    # - name: Debug Generated Files
-    #   run: |
-    #     echo "Checking Flutter Directory:"
-    #     ls -la ios/Flutter
-    #     echo "Generated.xcconfig should be in ios/Flutter"
     
     - name: Install Required CocoaPods Version
       run: |
@@ -210,7 +204,7 @@ jobs:
       run: swift --version
 
     - name: Build iOS (Release)
-      run: 
+      run: | 
         flutter clean
         flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
