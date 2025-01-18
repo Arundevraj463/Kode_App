@@ -95,6 +95,9 @@ jobs:
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
 
+    - name: Decode service account key
+      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
+
     - name: Check if service account file exists
       run: ls -l /tmp/service-account-key.json
 
@@ -205,7 +208,7 @@ jobs:
       run: 
         flutter clean
         flutter pub get
-        flutter build ios --no-codesign  # Add --no-codesign flag to skip codesigning if needed
+        flutter build ios --no-sign  # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |
