@@ -103,10 +103,15 @@ jobs:
     
     - name: Install Required CocoaPods Version
       run: |
-        COCOAPODS_VER=$(sed -n -e 's/^COCOAPODS: \([0-9.]*\)/\1/p' ios/Podfile.lock)
-        echo "Installing CocoaPods version $COCOAPODS_VER"
-        sudo gem install cocoapods -v $COCOAPODS_VER
-    
+        if [ -f ios/Podfile.lock ]; then          
+          COCOAPODS_VER=$(sed -n -e 's/^COCOAPODS: \([0-9.]*\)/\1/p' ios/Podfile.lock)
+          echo "Installing CocoaPods version $COCOAPODS_VER"
+          sudo gem install cocoapods -v $COCOAPODS_VER
+        else
+            echo "Podfile.lock not found, installing latest CocoaPods version"
+            sudo gem install cocoapods
+        fi    
+
     - name: Debug Directory
       run: |
         echo "Current Directory: $(pwd)"
@@ -115,7 +120,8 @@ jobs:
     - name: Reinstall Pods
       working-directory: ios
       run: |
-        rm -rf Pods Podfile.lock
+        # rm -rf Pods Podfile.lock
+        pod deintegrate
         pod install --repo-update
 
     - name: Clean Flutter project
@@ -126,11 +132,17 @@ jobs:
       with:
         xcode-version: '15'
 
+    - name: Check Xcode and System Info
+      run: |
+        xcode-select -p
+        xcodebuild -version
+        which xcodebuild
+
     - name: Check Swift version
       run: swift --version
 
     - name: Build iOS (Release)
-      run: flutter build ios --release --no-codesign --verbose  # Add --no-codesign flag to skip codesigning if needed
+      run: flutter build ios --no-codesign # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |
