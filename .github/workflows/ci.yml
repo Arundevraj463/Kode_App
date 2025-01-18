@@ -95,22 +95,22 @@ jobs:
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
 
-    # - name: Check if service account file exists
-    #   run: ls -l /tmp/service-account-key.json
+    - name: Check if service account file exists
+      run: ls -l /tmp/service-account-key.json
 
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
           credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
-    # - name: Debug the decoded service account file
-    #   run: cat /tmp/service-account-key.json 
+    - name: Debug the decoded service account file
+      run: cat /tmp/service-account-key.json 
 
     - name: Upload to Google Play
       id: upload_production
       uses: r0adkll/upload-google-play@v1
       with:
-        serviceAccountJson: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        serviceAccountJson: /tmp/service-account-key.json
         packageName: com.askantechkode  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
