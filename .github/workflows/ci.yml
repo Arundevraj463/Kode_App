@@ -218,7 +218,7 @@ jobs:
     - name: Set up App Store Connect API Key
       run: |
          mkdir -p $HOME/ios  # Create directory for the API key
-        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > $HOME/ios/AuthKey.p8  # Save the API key
+         echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > $HOME/ios/AuthKey.p8  # Save the API key
       shell: bash
 
     - name: Set up fastlane
