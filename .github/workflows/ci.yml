@@ -95,16 +95,16 @@ jobs:
     - name: Build APK (Release)
       run: flutter build appbundle --release --no-tree-shake-icons
 
-    - name: Check if service account file exists
-      run: ls -l /tmp/service-account-key.json
+    # - name: Check if service account file exists
+    #   run: ls -l /tmp/service-account-key.json
 
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
           credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
-    - name: Debug the decoded service account file
-      run: cat /tmp/service-account-key.json 
+    # - name: Debug the decoded service account file
+    #   run: cat /tmp/service-account-key.json 
 
     - name: Upload to Google Play
       id: upload_production
@@ -163,9 +163,14 @@ jobs:
     
     - name: Install Required CocoaPods Version
       run: |
-        COCOAPODS_VER=$(sed -n -e 's/^COCOAPODS: \([0-9.]*\)/\1/p' ios/Podfile.lock)
-        echo "Installing CocoaPods version $COCOAPODS_VER"
-        sudo gem install cocoapods -v $COCOAPODS_VER
+        if [ -f ios/Podfile.lock ]; then          
+          COCOAPODS_VER=$(sed -n -e 's/^COCOAPODS: \([0-9.]*\)/\1/p' ios/Podfile.lock)
+          echo "Installing CocoaPods version $COCOAPODS_VER"
+          sudo gem install cocoapods -v $COCOAPODS_VER
+        else
+            echo "Podfile.lock not found, installing latest CocoaPods version"
+            sudo gem install cocoapods
+        fi
     
     - name: Debug Directory
       run: |
@@ -175,7 +180,8 @@ jobs:
     - name: Reinstall Pods
       working-directory: ios
       run: |
-        rm -rf Pods Podfile.lock
+        # rm -rf Pods Podfile.lock
+        pod deintegrate
         pod install --repo-update
             
     - name: Clean Flutter project
@@ -186,11 +192,20 @@ jobs:
       with:
         xcode-version: '15'
 
+    - name: Check Xcode and System Info
+      run: |
+        xcode-select -p
+        xcodebuild -version
+        which xcodebuild
+
     - name: Check Swift version
       run: swift --version
 
     - name: Build iOS (Release)
-      run: flutter build ios --release --no-codesign --verbose  # Add --no-codesign flag to skip codesigning if needed
+      run: 
+        flutter clean
+        flutter pub get
+        flutter build ios --release --no-codesign --verbose  # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |
