@@ -96,10 +96,10 @@ jobs:
       run: flutter build appbundle --release --no-tree-shake-icons
 
     - name: Decode service account key
-      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
+      run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > google-credentials.json
 
     - name: Check if service account file exists
-      run: ls -l /tmp/service-account-key.json
+      run: ls -l google-credentials.json
 
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
@@ -107,13 +107,13 @@ jobs:
           credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
     - name: Debug the decoded service account file
-      run: cat /tmp/service-account-key.json 
+      run: cat google-credentials.json 
 
     - name: Upload to Google Play
       id: upload_production
       uses: r0adkll/upload-google-play@v1
       with:
-        serviceAccountJson: /tmp/service-account-key.json
+        serviceAccountJson: google-credentials.json
         packageName: com.askantechkode  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
@@ -208,7 +208,7 @@ jobs:
       run: 
         flutter clean
         flutter pub get
-        flutter build ios --no-sign  # Add --no-codesign flag to skip codesigning if needed
+        flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |

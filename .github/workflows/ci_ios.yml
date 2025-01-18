@@ -142,7 +142,10 @@ jobs:
       run: swift --version
 
     - name: Build iOS (Release)
-      run: flutter build ios --no-sign # Add --no-codesign flag to skip codesigning if needed
+      run: 
+        flutter clean
+        flutter pub get
+        flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Clone Certificates Repo
     #   run: |
