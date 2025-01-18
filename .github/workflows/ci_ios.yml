@@ -81,6 +81,11 @@ jobs:
     #   shell: bash
     #   env:
     #     APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+    - name: Set up App Store Connect API Key
+      run: |
+        mkdir -p $HOME/ios  # Create directory for the API key
+        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > $HOME/ios/AuthKey.p8  # Save the API key
+      shell: bash
 
     - name: Install dependencies
       run: flutter pub get
@@ -180,3 +185,7 @@ jobs:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Clean up certificate repo
+      run: |
+        rm -rf ./kode_app_cert_repo
