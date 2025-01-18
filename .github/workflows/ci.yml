@@ -101,18 +101,19 @@ jobs:
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          credentials_json: $(cat /tmp/service-account-key.json)
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
       with:
-        serviceAccountJsonPlainText	: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        serviceAccountJson: /tmp/service-account-key.json
         packageName: com.askantechkode  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
         status: completed
       # env:
       #   GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account-key.json
+        # credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
   # Publish to App Store (iOS)
   ios_publish:
