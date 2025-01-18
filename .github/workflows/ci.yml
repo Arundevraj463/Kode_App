@@ -98,10 +98,16 @@ jobs:
     - name: Decode service account key
       run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" | base64 --decode > /tmp/service-account-key.json
 
+    - name: Check if service account file exists
+      run: ls -l /tmp/service-account-key.json
+
     - name: Authenticate with Google Play
       uses: google-github-actions/auth@v1
       with:
-          credentials_json: $(cat /tmp/service-account-key.json)
+          credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+
+    - name: Debug the decoded service account file
+      run: cat /tmp/service-account-key.json 
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
@@ -111,9 +117,6 @@ jobs:
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
         status: completed
-      # env:
-      #   GOOGLE_APPLICATION_CREDENTIALS: /tmp/service-account-key.json
-        # credentials_json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
   # Publish to App Store (iOS)
   ios_publish:
@@ -150,11 +153,9 @@ jobs:
         ls -la ios/Flutter
         if [ ! -f ios/Flutter/Generated.xcconfig ]; then
           echo "Error: Generated.xcconfig is missing. Running build_runner..."
-          flutter pub run build_runner build
+          flutter pub get
+          flutter build ios --no-codesign
         fi
-            
-    - name: Clean Flutter project
-      run: flutter clean
     
     # - name: Debug Generated Files
     #   run: |
@@ -178,7 +179,10 @@ jobs:
       run: |
         rm -rf Pods Podfile.lock
         pod install --repo-update
-
+            
+    - name: Clean Flutter project
+      run: flutter clean
+      
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
