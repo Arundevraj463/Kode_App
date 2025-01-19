@@ -213,13 +213,13 @@ jobs:
     - name: Set up App Store Connect API Key
       run: |
         mkdir -p $HOME/ios
-        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > $HOME/ios/AuthKey.p8
+        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > $HOME/ios/AuthKey.json
       shell: bash
 
     - name: Verify API Key File
       run: |
         ls -la $HOME/ios
-        cat $HOME/ios/AuthKey.p8
+        cat $HOME/ios/AuthKey.json
     
     - name: Set up fastlane
       run: |
@@ -234,14 +234,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
         FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.p8
+        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.json
 
     - name: Build and Upload to App Store
       run: |
         fastlane gym --scheme Runner --export_method app-store  # Build the signed app
         fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
       env:
-        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.p8
+        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.json
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
