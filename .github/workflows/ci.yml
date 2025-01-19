@@ -236,6 +236,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
         FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.p8
 
     - name: Build and Upload to App Store
       run: |
