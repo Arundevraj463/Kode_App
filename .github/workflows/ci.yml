@@ -246,13 +246,11 @@ jobs:
     - name: Build and Upload to App Store
       run: |
         fastlane gym --scheme Runner --export_method app-store  # Build the signed app
-        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
+        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force--api_key_path "/Users/runner/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
       env:
-        APP_STORE_CONNECT_API_KEY_PATH: "/Users/runner/ios/AuthKey.json" 
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Clean up certificate repo
-      run: |
-        rm -rf ./kode_app_cert_repo
+      run: rm -rf ./kode_app_cert_repo
