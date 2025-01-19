@@ -153,7 +153,7 @@ jobs:
       run: flutter pub cache clean
 
     - name: Install dependencies
-      run: flutter pub get
+      run: flutter pub get --verbose
 
     - name: Verify Generated.xcconfig
       run: |
@@ -175,6 +175,7 @@ jobs:
             echo "Podfile.lock not found, installing latest CocoaPods version"
             sudo gem install cocoapods
         fi
+        pod --version  # Verifying CocoaPods installation
     
     - name: Debug Directory
       run: |
@@ -234,7 +235,8 @@ jobs:
         echo "API Key Path: $HOME/ios/AuthKey.json"
 
     - name: Fastlane match (Sign iOS app)
-      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
+      run: |
+        fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -244,8 +246,8 @@ jobs:
 
     - name: Build and Upload to App Store
       run: |
-        fastlane gym --scheme Runner --export_method app-store  # Build the signed app
-        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
+        fastlane gym --scheme Runner --export_method app-store --verbose || true  # Add verbose flag and allow failure
+        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

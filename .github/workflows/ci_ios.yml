@@ -66,12 +66,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2 
 
-    - name: Clone Certificates Repo
-      run: |
-        mkdir -p ./kode_app_cert_repo
-        git clone https://$GITHUB_TOKEN@github.com/devaaskan/Kode_App.git ./kode_app_cert_repo
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Clone the repository using SSH
+      run: git clone git@github.com:Arundevraj463/Kode_App.git ./kode_app_cert_repo
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
@@ -80,19 +81,6 @@ jobs:
 
     - name: Remove cached dependencies
       run: flutter pub cache clean
-
-    # - name: Set up App Store Connect API Key
-    #   run: |
-    #     mkdir -p $HOME/ios  # Create the directory if it doesn't exist
-    #     echo "$APP_STORE_CONNECT_API_KEY" > $HOME/ios/AuthKey.p8  # Save the secret to a file
-    #   shell: bash
-    #   env:
-    #     APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-    - name: Set up App Store Connect API Key
-      run: |
-        mkdir -p $HOME/ios  # Create directory for the API key
-        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > $HOME/ios/AuthKey.p8  # Save the API key
-      shell: bash
 
     - name: Install dependencies
       run: flutter pub get
@@ -106,12 +94,6 @@ jobs:
           flutter pub get
           flutter build ios --no-codesign
         fi
-    
-    # - name: Debug Generated Files
-    #   run: |
-    #     echo "Checking Flutter Directory:"
-    #     ls -la ios/Flutter
-    #     echo "Generated.xcconfig should be in ios/Flutter"
     
     - name: Install Required CocoaPods Version
       run: |
@@ -132,7 +114,6 @@ jobs:
     - name: Reinstall Pods
       working-directory: ios
       run: |
-        # rm -rf Pods Podfile.lock
         pod deintegrate
         pod install --repo-update
 
@@ -159,40 +140,46 @@ jobs:
         flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
-    # - name: Clone Certificates Repo
-    #   run: |
-    #     git clone https://$MY_GITHUB_TOKEN@github.com/devaaskan/Kode_App.git /path/to/clone
-    #   env:
-    #     MY_GITHUB_TOKEN: ${{ secrets.MATCH_PASSWORD }}
-
     - name: Set up App Store Connect API Key
       run: |
-        mkdir -p $HOME/ios  # Create directory for the API key
-        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > $HOME/ios/AuthKey.p8  # Save the API key
+        mkdir -p $HOME/ios
+        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > $HOME/ios/AuthKey.json
       shell: bash
+
+    - name: Verify API Key File
+      run: |
+        ls -la $HOME/ios
+        cat $HOME/ios/AuthKey.json
+
+    - name: Verify API Key Permissions
+      run: ls -l $HOME/ios/AuthKey.json
 
     - name: Set up fastlane
       run: |
         gem install fastlane
         fastlane --version
 
+    - name: Debug API Key Path
+      run: |
+        echo "API Key Path: $HOME/ios/AuthKey.json"
+
     - name: Fastlane match (Sign iOS app)
-      run: fastlane match appstore
+      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
 
     - name: Build and Upload to App Store
       run: |
         fastlane gym --scheme Runner --export_method app-store  # Build the signed app
-        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force
+        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
       env:
-        APP_STORE_CONNECT_API_KEY_PATH: $HOME/ios/AuthKey.p8
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Clean up certificate repo
-      run: |
-        rm -rf ./kode_app_cert_repo
+      run: rm -rf ./kode_app_cert_repo
