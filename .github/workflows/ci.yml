@@ -235,7 +235,7 @@ jobs:
         echo "API Key Path: $APP_STORE_CONNECT_API_KEY_PATH"
 
     - name: Fastlane match (Sign iOS app)
-      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "/Users/runner/ios/AuthKey.json"
+      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "/Users/runner/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
