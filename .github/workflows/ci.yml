@@ -230,7 +230,8 @@ jobs:
         fastlane --version
 
     - name: Debug API Key Path
-      run: echo "API Key Path: $HOME/ios/AuthKey.json"
+      run: |
+        echo "API Key Path: $HOME/ios/AuthKey.json"
 
     - name: Fastlane match (Sign iOS app)
       run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
