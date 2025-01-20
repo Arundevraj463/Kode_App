@@ -246,7 +246,7 @@ jobs:
 
     - name: Build and Upload to App Store
       run: |
-        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --allowProvisioningUpdates --verbose || true  # Add verbose flag and allow failure
+        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --allow_all_provisioning_updates --verbose || true  # Add verbose flag and allow failure
 
         # Check if the .ipa file exists
         if [ -f ./build/ios/ipa/Runner.ipa ]; then
