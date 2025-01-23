@@ -213,6 +213,7 @@ jobs:
 
     - name: Install Provisioning Profile
       run: |
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
       shell: bash
       
