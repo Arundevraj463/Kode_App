@@ -211,6 +211,11 @@ jobs:
         flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
+    - name: Install Provisioning Profile
+      run: |
+        echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
+      shell: bash
+      
     - name: Set up App Store Connect API Key
       run: |
         mkdir -p $HOME/ios
@@ -236,7 +241,7 @@ jobs:
 
     - name: Fastlane match (Sign iOS app)
       run: |
-        fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
+        fastlane match appstore --readonly --verbose
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
