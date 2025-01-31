@@ -575,71 +575,71 @@ class _SingleCoursePageState extends State<SingleCoursePage>
                                         if ((courseData?.authHasBought ==
                                             false)) ...{
                                           if (token.isNotEmpty) ...{
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  appText.price,
-                                                  style: style14Regular()
-                                                      .copyWith(color: greyA5),
-                                                ),
-                                                const Spacer(),
-                                                Text(
-                                                  ((courseData?.price ?? 0) ==
-                                                          0)
-                                                      ? appText.free
-                                                      : CurrencyUtils
-                                                          .calculator(
-                                                              courseData!
-                                                                      .price ??
-                                                                  0),
-                                                  style:
-                                                      style12Regular().copyWith(
-                                                    color:
-                                                        (courseData!.discountPercent ??
-                                                                    0) >
-                                                                0
-                                                            ? greyCF
-                                                            : green77(),
-                                                    decoration: (courseData!
-                                                                    .discountPercent ??
-                                                                0) >
-                                                            0
-                                                        ? TextDecoration
-                                                            .lineThrough
-                                                        : TextDecoration.none,
-                                                    decorationColor:
-                                                        (courseData!.discountPercent ??
-                                                                    0) >
-                                                                0
-                                                            ? greyCF
-                                                            : green77(),
-                                                  ),
-                                                ),
-                                                if ((courseData!
-                                                            .discountPercent ??
-                                                        0) >
-                                                    0) ...{
-                                                  space(0, width: 8),
-                                                  Text(
-                                                    CurrencyUtils.calculator(
-                                                        (courseData!.price ??
-                                                                0) -
-                                                            ((courseData!
-                                                                        .price ??
-                                                                    0) *
-                                                                (courseData!
-                                                                        .discountPercent ??
-                                                                    0) ~/
-                                                                100)),
-                                                    style: style14Regular()
-                                                        .copyWith(
-                                                      color: green77(),
-                                                    ),
-                                                  ),
-                                                },
-                                              ],
-                                            ),
-                                            space(16),
+                                            // Row(
+                                            //   children: [
+                                            //     Text(
+                                            //       appText.price,
+                                            //       style: style14Regular()
+                                            //           .copyWith(color: greyA5),
+                                            //     ),
+                                            //     const Spacer(),
+                                            //     Text(
+                                            //       ((courseData?.price ?? 0) ==
+                                            //               0)
+                                            //           ? appText.free
+                                            //           : CurrencyUtils
+                                            //               .calculator(
+                                            //                   courseData!
+                                            //                           .price ??
+                                            //                       0),
+                                            //       style:
+                                            //           style12Regular().copyWith(
+                                            //         color:
+                                            //             (courseData!.discountPercent ??
+                                            //                         0) >
+                                            //                     0
+                                            //                 ? greyCF
+                                            //                 : green77(),
+                                            //         decoration: (courseData!
+                                            //                         .discountPercent ??
+                                            //                     0) >
+                                            //                 0
+                                            //             ? TextDecoration
+                                            //                 .lineThrough
+                                            //             : TextDecoration.none,
+                                            //         decorationColor:
+                                            //             (courseData!.discountPercent ??
+                                            //                         0) >
+                                            //                     0
+                                            //                 ? greyCF
+                                            //                 : green77(),
+                                            //       ),
+                                            //     ),
+                                            //     if ((courseData!
+                                            //                 .discountPercent ??
+                                            //             0) >
+                                            //         0) ...{
+                                            //       space(0, width: 8),
+                                            //       Text(
+                                            //         CurrencyUtils.calculator(
+                                            //             (courseData!.price ??
+                                            //                     0) -
+                                            //                 ((courseData!
+                                            //                             .price ??
+                                            //                         0) *
+                                            //                     (courseData!
+                                            //                             .discountPercent ??
+                                            //                         0) ~/
+                                            //                     100)),
+                                            //         style: style14Regular()
+                                            //             .copyWith(
+                                            //           color: green77(),
+                                            //         ),
+                                            //       ),
+                                            //     },
+                                            //   ],
+                                            // ),
+                                            // space(16),
                                             Row(
                                               children: [
                                                 Expanded(
@@ -728,43 +728,43 @@ class _SingleCoursePageState extends State<SingleCoursePage>
                                                             isEnrollLoading)),
                                                 if (courseData?.subscribe ??
                                                     false) ...{
-                                                  space(0, width: 16),
-                                                  Expanded(
-                                                      child: button(
-                                                          onTap: () async {
-                                                            setState(() {
-                                                              isSubscribeLoading =
-                                                                  true;
-                                                            });
-
-                                                            bool res = await CartService
-                                                                .subscribeApplay(
-                                                                    courseData!
-                                                                        .id!);
-
-                                                            if (res) {
-                                                              getData();
-                                                            }
-
-                                                            setState(() {
-                                                              isSubscribeLoading =
-                                                                  false;
-                                                            });
-                                                          },
-                                                          width:
-                                                              getSize().width,
-                                                          height: 52,
-                                                          text:
-                                                              appText.subscribe,
-                                                          bgColor: Colors
-                                                              .transparent,
-                                                          textColor: green77(),
-                                                          borderColor:
-                                                              green77(),
-                                                          isLoading:
-                                                              isSubscribeLoading,
-                                                          loadingColor:
-                                                              green77())),
+                                                  // space(0, width: 16),
+                                                  // Expanded(
+                                                  //     child: button(
+                                                  //         onTap: () async {
+                                                  //           setState(() {
+                                                  //             isSubscribeLoading =
+                                                  //                 true;
+                                                  //           });
+                                                  //
+                                                  //           bool res = await CartService
+                                                  //               .subscribeApplay(
+                                                  //                   courseData!
+                                                  //                       .id!);
+                                                  //
+                                                  //           if (res) {
+                                                  //             getData();
+                                                  //           }
+                                                  //
+                                                  //           setState(() {
+                                                  //             isSubscribeLoading =
+                                                  //                 false;
+                                                  //           });
+                                                  //         },
+                                                  //         width:
+                                                  //             getSize().width,
+                                                  //         height: 52,
+                                                  //         text:
+                                                  //             appText.subscribe,
+                                                  //         bgColor: Colors
+                                                  //             .transparent,
+                                                  //         textColor: green77(),
+                                                  //         borderColor:
+                                                  //             green77(),
+                                                  //         isLoading:
+                                                  //             isSubscribeLoading,
+                                                  //         loadingColor:
+                                                  //             green77())),
                                                 }
                                               ],
                                             )

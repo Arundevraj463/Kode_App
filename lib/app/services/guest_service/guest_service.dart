@@ -8,106 +8,88 @@ import 'package:webinar/common/data/api_public_data.dart';
 import '../../../common/utils/constants.dart';
 import '../../../common/utils/http_handler.dart';
 
-class GuestService{
-
-  static Future<List<CurrencyModel>> getCurrencyList()async{
+class GuestService {
+  static Future<List<CurrencyModel>> getCurrencyList() async {
     List<CurrencyModel> data = [];
-    try{
-
+    try {
       String url = '${Constants.baseUrl}currency/list';
 
-
       Response res = await httpGet(url);
-        
+
       var jsonRes = jsonDecode(res.body);
 
       if (jsonRes['success']) {
-        jsonRes['data'].forEach((json){
+        jsonRes['data'].forEach((json) {
           data.add(CurrencyModel.fromJson(json));
         });
 
-
         PublicData.currencyListData = data;
         return data;
-      }else{
+      } else {
         return data;
       }
-
-
-    }catch(e){
+    } catch (e) {
       return data;
     }
   }
 
-  static Future<List<String>> getTimeZone()async{
+  static Future<List<String>> getTimeZone() async {
     List<String> data = [];
-    try{
-
+    try {
       String url = '${Constants.baseUrl}timezones';
 
-
       Response res = await httpGet(url);
-        
+
       var jsonRes = jsonDecode(res.body);
 
       if (jsonRes['success']) {
-
-
         return List.from(jsonRes['data']);
-      }else{
+      } else {
         return data;
       }
-
-
-    }catch(e){
+    } catch (e) {
       return data;
     }
   }
 
-  static Future config()async{
-    try{
+  static Future config() async {
+    try {
       String url = '${Constants.baseUrl}config';
 
       Response res = await httpGet(
-        url, 
+        url,
       );
 
       var jsonResponse = jsonDecode(res.body);
 
-      if(res.statusCode == 200){
-        
+      if (res.statusCode == 200) {
         PublicData.apiConfigData = jsonResponse;
         return jsonResponse;
-      }else{
-
+      } else {
         return null;
       }
-
-    }catch(e){
+    } catch (e) {
       return null;
     }
   }
 
-  static Future<RegisterConfigModel?> registerConfig(String role)async{
-    try{
-      String url = '${Constants.baseUrl}config/register/$role';
+  static Future<RegisterConfigModel?> registerConfig(String role) async {
+    try {
+      String url = '${Constants.baseUrl}config/signup/$role';
 
       Response res = await httpGet(
-        url, 
+        url,
       );
 
       var jsonResponse = jsonDecode(res.body);
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         return RegisterConfigModel.fromJson(jsonResponse['data']);
-      }else{
-
+      } else {
         return null;
       }
-
-    }catch(e){
+    } catch (e) {
       return null;
     }
   }
-
 }

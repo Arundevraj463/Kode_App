@@ -114,7 +114,7 @@ jobs:
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJson: google-credentials.json
-        packageName: com.askantechkode  # Replace with your app's actual package name
+        packageName: com.askankodeapp  # Replace with your app's actual package name
         releaseFiles: build/app/outputs/bundle/release/app-release.aab
         track: production  # Change to 'beta', 'production', etc., as required
         status: completed

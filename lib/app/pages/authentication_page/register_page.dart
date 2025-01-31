@@ -92,8 +92,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     mailController.addListener(() {
-      if ((mailController.text.trim().isNotEmpty ||
-              phoneController.text.trim().isNotEmpty) &&
+      if (mailController.text.trim().isNotEmpty &&
+          phoneController.text.trim().isNotEmpty &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -109,8 +109,8 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     phoneController.addListener(() {
-      if ((mailController.text.trim().isNotEmpty ||
-              phoneController.text.trim().isNotEmpty) &&
+      if (mailController.text.trim().isNotEmpty &&
+          phoneController.text.trim().isNotEmpty &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -126,8 +126,8 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     passwordController.addListener(() {
-      if ((mailController.text.trim().isNotEmpty ||
-              phoneController.text.trim().isNotEmpty) &&
+      if (mailController.text.trim().isNotEmpty &&
+          phoneController.text.trim().isNotEmpty &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -143,8 +143,8 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     retypePasswordController.addListener(() {
-      if ((mailController.text.trim().isNotEmpty ||
-              phoneController.text.trim().isNotEmpty) &&
+      if (mailController.text.trim().isNotEmpty &&
+          phoneController.text.trim().isNotEmpty &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -517,6 +517,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         // email
                                         registerConfig?.registerMethod ?? '',
                                         mailController.text.trim(),
+                                        countryCode.dialCode.toString(),
+                                        phoneController.text.trim(),
                                         passwordController.text.trim(),
                                         retypePasswordController.text.trim(),
                                         accountType,
@@ -529,6 +531,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         arguments: {
                                           'user_id': res['user_id'],
                                           'email': mailController.text.trim(),
+                                          'countryCode':
+                                              countryCode.dialCode.toString(),
+                                          'phone': phoneController.text.trim(),
                                           'password':
                                               passwordController.text.trim(),
                                           'retypePassword':

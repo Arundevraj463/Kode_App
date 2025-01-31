@@ -1,59 +1,21 @@
 {
   "project_info": {
-    "project_number": "228355712948",
-    "project_id": "askanlms",
-    "storage_bucket": "askanlms.firebasestorage.app"
+    "project_number": "408173905739",
+    "project_id": "kodeapp-89b23",
+    "storage_bucket": "kodeapp-89b23.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:228355712948:android:b5ad4215b82d43516074e1",
+        "mobilesdk_app_id": "1:408173905739:android:b5148c3e423912007c8ace",
         "android_client_info": {
-          "package_name": "com.askanacademy"
+          "package_name": "com.askankodeapp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBtdQX2Wp650nQMX1pj1WiUBIt-wkn_HmE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:228355712948:android:ad586132992810566074e1",
-        "android_client_info": {
-          "package_name": "com.askankode"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBtdQX2Wp650nQMX1pj1WiUBIt-wkn_HmE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:228355712948:android:baaeac31198027b06074e1",
-        "android_client_info": {
-          "package_name": "com.askantechkode"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBtdQX2Wp650nQMX1pj1WiUBIt-wkn_HmE"
+          "current_key": "AIzaSyBntySRaBARLIGfZGAVPoN09Z75cPErlqc"
         }
       ],
       "services": {

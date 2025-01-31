@@ -400,7 +400,7 @@ provider
 ADDED from /Users/devanathan/Documents/test1/askan_academy/android/app/src/main/AndroidManifest.xml:45:9-89
 	android:authorities
 		ADDED from /Users/devanathan/Documents/test1/askan_academy/android/app/src/main/AndroidManifest.xml:45:19-86
-activity#com.askanacademy.MainActivity
+activity#com.askankodeapp.MainActivity
 ADDED from /Users/devanathan/Documents/test1/askan_academy/android/app/src/main/AndroidManifest.xml:59:9-89:20
 	android:launchMode
 		ADDED from /Users/devanathan/Documents/test1/askan_academy/android/app/src/main/AndroidManifest.xml:62:13-43
@@ -1260,7 +1260,7 @@ ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transfor
 		ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
-permission#com.askanacademy.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.askankodeapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
@@ -1270,7 +1270,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
-uses-permission#com.askanacademy.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.askankodeapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.1] /Users/devanathan/.gradle/caches/transforms-4/9a690e714120b28638035596bcd092ba/transformed/core-1.13.1/AndroidManifest.xml:26:22-94

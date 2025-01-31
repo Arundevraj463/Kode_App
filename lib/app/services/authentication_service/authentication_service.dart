@@ -21,8 +21,6 @@ class AuthenticationService {
         'id': token,
       });
 
-      print(res.body);
-
       if (res.statusCode == 200) {
         await AppData.saveAccessToken(jsonDecode(res.body)['data']['token']);
         return true;
@@ -81,17 +79,21 @@ class AuthenticationService {
   static Future<Map?> registerWithEmail(
       String registerMethod,
       String email,
+      String countryCode,
+      String mobile,
       String password,
       String repeatPassword,
       String? accountType,
       List<Fields>? fields) async {
     try {
-      String url = '${Constants.baseUrl}register/step/1';
+      String url = '${Constants.baseUrl}signup/step/1';
 
       Map body = {
-        "register_method": registerMethod,
+        "reg_method": registerMethod,
         "country_code": null,
         'email': email,
+        "country_code": countryCode,
+        'mobile': mobile,
         'password': password,
         'password_confirmation': repeatPassword
       };
@@ -116,6 +118,7 @@ class AuthenticationService {
       Response res = await httpPost(url, body);
 
       var jsonResponse = jsonDecode(res.body);
+
       if (jsonResponse['success'] ||
           jsonResponse['status'] == 'go_step_2' ||
           jsonResponse['status'] == 'go_step_3') {
@@ -144,10 +147,10 @@ class AuthenticationService {
       String? accountType,
       List<Fields>? fields) async {
     // try{
-    String url = '${Constants.baseUrl}register/step/1';
+    String url = '${Constants.baseUrl}signup/step/1';
 
     Map body = {
-      "register_method": registerMethod,
+      "reg_method": registerMethod,
       "country_code": countryCode,
       'mobile': mobile,
       'password': password,
@@ -170,10 +173,7 @@ class AuthenticationService {
 
       body.addEntries({'fields': bodyFields.toString()}.entries);
     }
-
     Response res = await httpPost(url, body);
-
-    print(res.body);
 
     var jsonResponse = jsonDecode(res.body);
     if (jsonResponse['success'] ||
@@ -220,8 +220,10 @@ class AuthenticationService {
 
   static Future<bool> verifyCode(int userId, String code) async {
     try {
-      String url = '${Constants.baseUrl}register/step/2';
-
+      String url = '${Constants.baseUrl}signup/step/2';
+      print(url);
+      print(userId.toString());
+      print(code);
       Response res = await httpPost(url, {
         "user_id": userId.toString(),
         "code": code,
@@ -244,7 +246,7 @@ class AuthenticationService {
   static Future<bool> registerStep3(
       int userId, String name, String referralCode) async {
     try {
-      String url = '${Constants.baseUrl}register/step/3';
+      String url = '${Constants.baseUrl}signup/step/3';
 
       Response res = await httpPost(url, {
         "user_id": userId.toString(),
