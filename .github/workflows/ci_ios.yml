@@ -185,8 +185,9 @@ jobs:
 
     - name: Build and Upload to App Store
       run: |
-        fastlane gym --scheme Runner --export_method app-store  # Build the signed app
-        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
+        fastlane gym --scheme Runner --export_method app-store
+        echo '${{ secrets.APP_STORE_CONNECT_API_KEY }}' > api_key.jsonfastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key api_key.json --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
+        
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
