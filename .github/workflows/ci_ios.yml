@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'ios/**'
+    # paths:
+    #   - 'ios/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'ios/**' 
+    # paths:
+    #   - 'ios/**' 
 
 jobs:
   # Build and Test Flutter App
@@ -87,7 +87,7 @@ jobs:
       run: flutter pub cache clean
 
     - name: Install dependencies
-      run: flutter pub get
+      run: flutter pub get --verbose
 
     - name: Verify Generated.xcconfig
       run: |
@@ -109,6 +109,7 @@ jobs:
             echo "Podfile.lock not found, installing latest CocoaPods version"
             sudo gem install cocoapods
         fi    
+        pod --version  # Verifying CocoaPods installation
 
     - name: Debug Directory
       run: |
@@ -143,6 +144,12 @@ jobs:
         flutter clean
         flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
+
+    - name: Install Provisioning Profile
+      run: |
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
+      shell: bash
 
     - name: Set up App Store Connect API Key
       run: |
@@ -179,11 +186,13 @@ jobs:
     - name: Build and Upload to App Store
       run: |
         fastlane gym --scheme Runner --export_method app-store  # Build the signed app
-        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
+        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
 
     - name: Clean up certificate repo
       run: rm -rf ./kode_app_cert_repo
