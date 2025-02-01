@@ -185,7 +185,7 @@ jobs:
         
     - name: Build and Upload to TestFlight
       run: |
-        fastlane gym --scheme Runner --export_method app-store  # Build the signed app
+        fastlane gym --scheme Runner --export_method app-store --workspace ./ios/Runner.xcworkspace # Build the signed app
         echo '${{ secrets.APP_STORE_CONNECT_API_KEY }}' > api_key.json  # Save API key
         fastlane pilot upload --ipa ./build/ios/ipa/Runner.ipa --api_key api_key.json --app_identifier ${{ secrets.APP_IDENTIFIER }} --skip_waiting_for_build_processing --verbose
       env:
