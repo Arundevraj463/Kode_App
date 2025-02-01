@@ -140,10 +140,13 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Check git remote URL
+      run: git remote -v
         
     - name: Clone the repository using SSH
       run: git clone git@github.com:Arundevraj463/Kode_App.git ./kode_app_cert_repo
-      
+
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -241,8 +244,7 @@ jobs:
         echo "API Key Path: $HOME/ios/AuthKey.json"
 
     - name: Fastlane match (Sign iOS app)
-      run: |
-        fastlane match appstore --readonly --verbose
+      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
