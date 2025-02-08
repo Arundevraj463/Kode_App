@@ -214,10 +214,18 @@ jobs:
         flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
+    # - name: Install Provisioning Profile
+    #   run: |
+    #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+    #     echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
+    #   shell: bash
+
     - name: Install Provisioning Profile
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
+        ls -la ~/Library/MobileDevice/Provisioning\ Profiles
+        security find-identity -v -p codesigning
       shell: bash
       
     - name: Set up App Store Connect API Key
