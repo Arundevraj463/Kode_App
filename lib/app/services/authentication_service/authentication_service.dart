@@ -66,7 +66,9 @@ class AuthenticationService {
         await AppData.saveName('');
         return true;
       } else {
-        jsonResponse['message'] = 'The Password or Email Id is incorrect';
+        if (jsonResponse['message'] == 'auth.incorrect') {
+          jsonResponse['message'] = 'The Password or Email Id is incorrect';
+        }
         ErrorHandler()
             .showError(ErrorEnum.error, jsonResponse, readMessage: true);
         return false;
@@ -126,9 +128,8 @@ class AuthenticationService {
           'user_id': jsonResponse['data']['user_id'],
           'step': jsonResponse['status']
         };
-      } else if (!jsonResponse['success'] &&
-          jsonResponse['status'] == 'already_registered') {
-        showSnackBar(ErrorEnum.alert, 'The Account is Already Deleted');
+      } else if (!jsonResponse['success']) {
+        showSnackBar(ErrorEnum.alert, jsonResponse['message']);
       } else {
         ErrorHandler().showError(ErrorEnum.error, jsonResponse);
         return null;
@@ -221,9 +222,7 @@ class AuthenticationService {
   static Future<bool> verifyCode(int userId, String code) async {
     try {
       String url = '${Constants.baseUrl}signup/step/2';
-      print(url);
-      print(userId.toString());
-      print(code);
+
       Response res = await httpPost(url, {
         "user_id": userId.toString(),
         "code": code,

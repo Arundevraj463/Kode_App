@@ -63,16 +63,18 @@ class SettingWidget {
 
           space(14),
 
-          input(languageController, languageNode, appText.language,
-              isBorder: true,
-              title: appText.language,
-              isReadOnly: true,
-              rightIconPath: AppAssets.arrowDownSvg,
-              rightIconSize: 16, onTap: () async {
-            await MainWidget.showLanguageDialog();
-
-            onTapChangeState();
-          }),
+          input(
+            languageController, languageNode, appText.language,
+            isBorder: true,
+            title: appText.language,
+            isReadOnly: true,
+            // rightIconPath: AppAssets.arrowDownSvg,
+            // rightIconSize: 16,
+            //     onTap: () async {
+            //   await MainWidget.showLanguageDialog();
+            //   onTapChangeState();
+            // }
+          ),
 
           // space(14),
 
@@ -592,5 +594,23 @@ class SettingWidget {
         );
       }),
     );
+  }
+
+  static void floatingsavebutton(BuildContext context, Widget saveContainer) {
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Material(
+          color: Colors.transparent,
+          child: saveContainer,
+        ),
+      ),
+    );
+    Overlay.of(context)?.insert(overlayEntry);
+    Future.delayed(const Duration(seconds: 5), () {
+      overlayEntry.remove();
+    });
   }
 }

@@ -94,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
     mailController.addListener(() {
       if (mailController.text.trim().isNotEmpty &&
           phoneController.text.trim().isNotEmpty &&
+          phoneController.text.trim().length == 10 &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -111,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
     phoneController.addListener(() {
       if (mailController.text.trim().isNotEmpty &&
           phoneController.text.trim().isNotEmpty &&
+          phoneController.text.trim().length == 10 &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -128,6 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
     passwordController.addListener(() {
       if (mailController.text.trim().isNotEmpty &&
           phoneController.text.trim().isNotEmpty &&
+          phoneController.text.trim().length == 10 &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -145,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
     retypePasswordController.addListener(() {
       if (mailController.text.trim().isNotEmpty &&
           phoneController.text.trim().isNotEmpty &&
+          phoneController.text.trim().length == 10 &&
           passwordController.text.trim().isNotEmpty &&
           retypePasswordController.text.trim().isNotEmpty) {
         if (isEmptyInputs) {
@@ -436,8 +440,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         space(0, width: 15),
 
                         Expanded(
-                            child: input(phoneController, phoneNode,
-                                appText.phoneNumber))
+                            child: input(
+                                phoneController, phoneNode, appText.phoneNumber,
+                                isNumber: true, maxLength: 10))
                       ],
                     )
                   } else ...{
@@ -584,6 +589,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               setState(() {
                                 isSendingData = false;
                               });
+                            } else {
+                              showSnackBar(
+                                  ErrorEnum.alert, '${appText.pwdmismatch}');
                             }
                           }
                         },

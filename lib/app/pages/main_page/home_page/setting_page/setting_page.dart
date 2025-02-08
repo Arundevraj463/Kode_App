@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:timezone/timezone.dart';
 import 'package:webinar/app/models/login_history_model.dart';
 import 'package:webinar/app/providers/user_provider.dart';
 import 'package:webinar/app/services/guest_service/guest_service.dart';
@@ -20,6 +20,7 @@ import 'package:webinar/common/enums/error_enum.dart';
 import 'package:webinar/common/utils/app_text.dart';
 import 'package:webinar/config/styles.dart';
 import 'package:webinar/locator.dart';
+import 'package:crypto/crypto.dart';
 
 import '../../../../../config/assets.dart';
 import '../../../../../config/colors.dart';
@@ -39,6 +40,7 @@ class _SettingPageState extends State<SettingPage>
 
   bool isLocalImage = false;
   File? localImage;
+  bool ischanged = false;
 
   TextEditingController emailController = TextEditingController();
   FocusNode emailNode = FocusNode();
@@ -92,7 +94,7 @@ class _SettingPageState extends State<SettingPage>
   void initState() {
     super.initState();
 
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
 
     emailController.text = locator<UserProvider>().profile?.email ?? '';
     nameController.text = locator<UserProvider>().profile?.fullName ?? '';
@@ -112,8 +114,10 @@ class _SettingPageState extends State<SettingPage>
 
     LocationService.getCountries().then((value) {
       countries = value;
-      selectedCountry = countries.singleWhere((element) =>
-          element.id == (locator<UserProvider>().profile?.countryId));
+      if (countries.isNotEmpty) {
+        selectedCountry = countries.singleWhere((element) =>
+            element.id == (locator<UserProvider>().profile?.countryId));
+      }
 
       setState(() {});
     });
@@ -127,6 +131,80 @@ class _SettingPageState extends State<SettingPage>
       loginHistory = value;
       setState(() {});
     });
+    tabController.addListener(() {
+      isupdate();
+    });
+    emailController.addListener(() {
+      if (tabController.index == 0) {
+        isupdate();
+      }
+    });
+    nameController.addListener(() {
+      if (tabController.index == 0) {
+        isupdate();
+      }
+    });
+    phoneController.addListener(() {
+      if (tabController.index == 0) {
+        isupdate();
+      }
+    });
+    currentPasswordController.addListener(() {
+      if (tabController.index == 1) {
+        isupdate();
+      }
+    });
+    newPasswordController.addListener(() {
+      if (tabController.index == 1) {
+        isupdate();
+      }
+    });
+    retypePasswordController.addListener(() {
+      if (tabController.index == 1) {
+        isupdate();
+      }
+    });
+  }
+
+  updateimage() async {
+    bool same = await UserService.isSameImage(
+        locator<UserProvider>().profile!.avatar.toString(), localImage!);
+    if ((localImage != null && !same) ||
+        indentityScanImage != null ||
+        certificateImage != null) {
+      await UserService.updateImage(
+          localImage, indentityScanImage, certificateImage);
+    }
+  }
+
+  isupdate() {
+    if (tabController.index == 0 &&
+        emailController.text.trim().isNotEmpty &&
+        nameController.text.trim().isNotEmpty &&
+        phoneController.text.trim().isNotEmpty &&
+        (emailController.text.trim() !=
+                locator<UserProvider>().profile?.email ||
+            nameController.text.trim() !=
+                locator<UserProvider>().profile?.fullName ||
+            phoneController.text.trim() !=
+                locator<UserProvider>().profile?.mobile ||
+            newsletter != locator<UserProvider>().profile?.newsletter)) {
+      ischanged = true;
+      setState(() {});
+    } else if (tabController.index == 1 &&
+        currentPasswordController.text.trim().isNotEmpty &&
+        newPasswordController.text.trim().isNotEmpty &&
+        retypePasswordController.text.trim().isNotEmpty) {
+      ischanged = true;
+      setState(() {});
+    } else if (tabController.index == 2 &&
+        timeZoneSelected != locator<UserProvider>().profile?.timezone) {
+      ischanged = true;
+      setState(() {});
+    } else {
+      ischanged = false;
+      setState(() {});
+    }
   }
 
   Future<File> compressImage(XFile file) async {
@@ -148,6 +226,7 @@ class _SettingPageState extends State<SettingPage>
     return directionality(
         child: Scaffold(
       appBar: appbar(title: appText.settings),
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
@@ -182,6 +261,7 @@ class _SettingPageState extends State<SettingPage>
 
                               if (image != null) {
                                 localImage = await compressImage(image);
+                                updateimage();
                                 setState(() {});
                               }
                             } on PlatformException catch (e) {
@@ -293,6 +373,7 @@ class _SettingPageState extends State<SettingPage>
                         setState(() {});
                       }, (val) {
                         newsletter = val;
+                        isupdate();
                         setState(() {});
                       }),
                       SettingWidget.securityPage(
@@ -354,6 +435,7 @@ class _SettingPageState extends State<SettingPage>
                         timeZoneSelected,
                         (data) {
                           timeZoneSelected = data;
+                          isupdate();
                           setState(() {});
                         },
                         provinceSelectedId,
@@ -439,7 +521,8 @@ class _SettingPageState extends State<SettingPage>
                           selectedCountry?.id,
                           provinceSelectedId,
                           citySelectedId,
-                          districtSelectedId);
+                          districtSelectedId,
+                          tabController.index);
 
                       if (res) {
                         if (currentPasswordController.text.trim().isNotEmpty &&
@@ -480,7 +563,7 @@ class _SettingPageState extends State<SettingPage>
                     width: getSize().width,
                     height: 51,
                     text: appText.save,
-                    bgColor: green77(),
+                    bgColor: ischanged ? green77() : greyCF,
                     textColor: Colors.white,
                     isLoading: isLoading),
               ),

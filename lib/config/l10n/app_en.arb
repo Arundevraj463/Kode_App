@@ -546,7 +546,7 @@
     "thisIsACourseSupportMessage" : "This is a course support message",
     "currentPassword" : "Current Password",
     "newPassword" : "New Password",
-    "passwordAndRetypePassNotMatch" : "The new password does not match the new password",
+    "passwordAndRetypePassNotMatch" : "The New Password does not Match the Retype Password",
     "nextBadges" : "Next Badges",
     "remainedPoints" : "Remained\nPoints",
     "totalPoints" : "Total\nPoints",
@@ -626,7 +626,8 @@
     "noHistpoints" : "No History Points!",
     "noHistpointsdesc" : "Currently you have no history points.",
     "noNotices" : "No Notices!",
-    "noNoticesdesc" : "You have no notices yet."
+    "noNoticesdesc" : "You have no notices yet.",
+    "pwdmismatch" : "Passwords Mismatch"
 
 
     

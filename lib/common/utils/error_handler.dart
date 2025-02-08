@@ -13,7 +13,12 @@ class ErrorHandler {
       });
 
       if (errors.isNotEmpty) {
-        showSnackBar(type, null, desc: errors.first);
+        String titleCaseText = errors.first.split(' ').map((word) {
+          return word.isEmpty
+              ? word
+              : word[0].toUpperCase() + word.substring(1).toLowerCase();
+        }).join(' ');
+        showSnackBar(type, null, desc: titleCaseText);
       }
     } else {
       String titleCaseText = jsonResponse['message'].split(' ').map((word) {

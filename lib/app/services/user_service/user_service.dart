@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:http/http.dart';
 import 'package:webinar/app/models/course_model.dart';
@@ -13,9 +14,12 @@ import 'package:webinar/common/data/app_data.dart';
 import 'package:webinar/common/utils/app_text.dart';
 import 'package:webinar/common/utils/http_handler.dart';
 import 'package:webinar/locator.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 
 import 'package:dio/dio.dart' as dio;
 
+import '../../../common/data/app_language.dart';
 import '../../../common/enums/error_enum.dart';
 import '../../../common/utils/constants.dart';
 import '../../../common/utils/error_handler.dart';
@@ -133,7 +137,6 @@ class UserService {
     );
 
     var jsonResponse = jsonDecode(res.body);
-    print(jsonResponse);
 
     if (jsonResponse['success'] ?? false) {
       jsonResponse['data']?['favorites']?.forEach((json) {
@@ -348,7 +351,6 @@ class UserService {
       });
 
       var jsonResponse = jsonDecode(res.body);
-      // print(jsonResponse);
 
       if (jsonResponse['success']) {
         ErrorHandler()
@@ -377,7 +379,8 @@ class UserService {
       int? countryId,
       int? provinceId,
       int? cityId,
-      int? districtId) async {
+      int? districtId,
+      int? tabindex) async {
     try {
       String url = '${Constants.baseUrl}panel/profile-setting';
 
@@ -419,12 +422,12 @@ class UserService {
         if (districtId != null) ...{
           "district_id": districtId,
         },
+        "index": tabindex,
       });
 
       var jsonResponse = jsonDecode(res.body);
 
       if (jsonResponse['success']) {
-        print(jsonResponse);
         await getProfile();
         ErrorHandler()
             .showError(ErrorEnum.success, jsonResponse, readMessage: true);
@@ -541,8 +544,6 @@ class UserService {
         return false;
       }
     } on dio.DioException catch (e) {
-      print(e.response?.data);
-
       ErrorHandler().showError(ErrorEnum.error, e.response?.data);
       return false;
     }
@@ -564,5 +565,24 @@ class UserService {
     } catch (e) {
       return false;
     }
+  }
+
+  static Future<bool> isSameImage(String backendUrl, File localFile) async {
+    try {
+      final response = await http.get(Uri.parse(backendUrl));
+
+      if (response.statusCode == 200) {
+        img.Image? backendImage = img.decodeImage(response.bodyBytes);
+        img.Image? localImage = img.decodeImage(await localFile.readAsBytes());
+
+        if (backendImage != null && localImage != null) {
+          return backendImage.width == localImage.width &&
+              backendImage.height == localImage.height;
+        }
+      }
+    } catch (e) {
+      // print("Error: $e");
+    }
+    return false;
   }
 }

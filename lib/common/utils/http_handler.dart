@@ -236,7 +236,7 @@ Future<Response> httpPutWithToken(dynamic url, dynamic body,
 Future<Response> httpGetWithToken(dynamic url,
     {bool isRedirectingStatusCode = true}) async {
   String token = await AppData.getAccessToken();
-  print(token);
+
   Map<String, String> headers = {
     "Authorization": "Bearer $token",
     "Accept": "application/json",

@@ -181,14 +181,15 @@ class _RewardPointPageState extends State<RewardPointPage> {
                         ),
                         space(4),
                         Padding(
-                          padding: padding(horizontal: 50),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: getSize().width * 0.2),
                           child: Text(
                             appText.noHistpointsdesc,
                             style: style14Regular().copyWith(color: grey5E),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        space(getSize().height * .1)
+                        space(getSize().height * 0.1)
                       ],
                     ),
                   },
