@@ -60,9 +60,7 @@ jobs:
   android_publish:
     runs-on: ubuntu-latest
     needs: build_and_test
-    env:
-      RUN_ANDROID_BUILD: ${{ secrets.RUN_ANDROID_BUILD }}
-    if: ${{ env.RUN_ANDROID_BUILD == 'true' && success() }}
+    if: ${{ secrets.RUN_ANDROID_BUILD == 'true' && success() }}
 
     steps:
     - name: Checkout repository
