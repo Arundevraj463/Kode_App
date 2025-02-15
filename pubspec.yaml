@@ -103,6 +103,7 @@ dependency_overrides:
 #      ref: master
 #      path: flutter_inappwebview_ios
   flutter_inappwebview_ios: 1.1.2
+  ordered_set: ^6.1.1
 
 dev_dependencies:
   flutter_test:
