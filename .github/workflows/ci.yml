@@ -213,7 +213,7 @@ jobs:
       run: | 
         flutter clean
         flutter pub get
-        flutter build ios --no-codesign # Add --no-codesign flag to skip codesigning if needed
+        flutter build ios --no-codesign # || true  Add --no-codesign flag to skip codesigning if needed
 
     # - name: Install Provisioning Profile
     #   run: |
@@ -264,7 +264,7 @@ jobs:
     - name: Build and Upload to App Store
       run: |
         export XCODE_XCCONFIG_FILE=""
-        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --allow-provisioning-updates --verbose || true  # Add verbose flag and allow failure
+        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --allow-provisioning-updates --verbose # || true  Add verbose flag and allow failure
         ls -l ./build/ios/ipa/
 
         # Check if the .ipa file exists
