@@ -211,7 +211,7 @@ jobs:
       run: | 
         # flutter clean
         # flutter pub get
-        flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
+        flutter build ios --no-codesign # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Install Provisioning Profile
     #   run: |
