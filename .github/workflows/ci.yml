@@ -204,14 +204,20 @@ jobs:
         xcode-select -p
         xcodebuild -version
         which xcodebuild
+        flutter --version
 
     - name: Check Swift version
       run: swift --version
 
     - name: Build iOS (Release)
       run: | 
-        # flutter clean
-        # flutter pub get
+        flutter clean
+        rm -rf ios/Pods ios/Podfile.lock
+        flutter pub get
+        cd ios
+        pod install --repo-update
+        cd ..
+        flutter pub get
         flutter build ios --no-codesign # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Install Provisioning Profile

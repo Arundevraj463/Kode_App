@@ -16,6 +16,7 @@ jobs:
   # Build and Test Flutter App
   build_and_test:
     runs-on: ubuntu-latest
+    if: success()
 
     steps:
     - name: Checkout repository
