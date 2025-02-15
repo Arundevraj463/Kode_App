@@ -97,11 +97,12 @@ dependency_overrides:
 #      url: https://github.com/holzgeist/flutter_inappwebview
 #      path: flutter_inappwebview_ios
 #      ref: d89b1d32638b49dfc58c4b7c84153be0c269d057
-  flutter_inappwebview_ios:
-    git:
-      url: https://github.com/andychucs/flutter_inappwebview
-      ref: master
-      path: flutter_inappwebview_ios
+#  flutter_inappwebview_ios:
+#    git:
+#      url: https://github.com/andychucs/flutter_inappwebview
+#      ref: master
+#      path: flutter_inappwebview_ios
+  flutter_inappwebview_ios: 1.1.2
 
 dev_dependencies:
   flutter_test:
