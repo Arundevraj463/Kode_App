@@ -190,8 +190,8 @@ jobs:
         pod deintegrate
         pod install --repo-update
             
-    - name: Clean Flutter project
-      run: flutter clean
+    # - name: Clean Flutter project
+    #   run: flutter clean
       
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -209,8 +209,8 @@ jobs:
 
     - name: Build iOS (Release)
       run: | 
-        flutter clean
-        flutter pub get
+        # flutter clean
+        # flutter pub get
         flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
 
     # - name: Install Provisioning Profile
