@@ -16,7 +16,6 @@ jobs:
   # Build and Test Flutter App
   build_and_test:
     runs-on: ubuntu-latest
-    if: false
 
     steps:
     - name: Checkout repository
@@ -75,6 +74,9 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  
+    - name: Check git remote URL
+      run: git remote -v
         
     - name: Clone the repository using SSH
       run: git clone git@github.com:Arundevraj463/Kode_App.git ./kode_app_cert_repo
@@ -123,8 +125,8 @@ jobs:
         pod deintegrate
         pod install --repo-update
 
-    - name: Clean Flutter project
-      run: flutter clean
+    # - name: Clean Flutter project
+    #   run: flutter clean
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -136,6 +138,7 @@ jobs:
         xcode-select -p
         xcodebuild -version
         which xcodebuild
+        flutter --version
 
     - name: Check Swift version
       run: swift --version
@@ -144,70 +147,77 @@ jobs:
       run: | 
         flutter clean
         flutter pub get
-        flutter build ios --no-codesign || true # Add --no-codesign flag to skip codesigning if needed
+        flutter build ios --no-codesign # || true  Add --no-codesign flag to skip codesigning if needed
 
     - name: Install Provisioning Profile
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/AppStoreProfile.mobileprovision
+        ls -la ~/Library/MobileDevice/Provisioning\ Profiles
+        security find-identity -v -p codesigning
       shell: bash
 
     - name: Set up App Store Connect API Key
       run: |
         mkdir -p $HOME/ios
-        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > $HOME/ios/AuthKey.json
+        echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > $HOME/ios/AuthKey.p8
       shell: bash
 
     - name: Verify API Key File
-      run: |
-        ls -la $HOME/ios
-        cat $HOME/ios/AuthKey.json
+      run: ls -la $HOME/ios
 
-    - name: Verify API Key Permissions
-      run: ls -l $HOME/ios/AuthKey.json
+    # - name: Verify API Key Permissions
+    #   run: ls -l $HOME/ios/AuthKey.json
 
-    - name: Set up fastlane
-      run: |
-        gem install fastlane
-        fastlane --version
-
-    - name: Debug API Key Path
-      run: |
-        echo "API Key Path: $HOME/ios/AuthKey.json"
-
-    - name: Fastlane match (Sign iOS app)
-      run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }}
-      env:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-        
-    - name: Build and Upload to TestFlight
-      run: |
-        fastlane gym --scheme Runner --export_method app-store --workspace ./ios/Runner.xcworkspace # Build the signed app
-        echo '${{ secrets.APP_STORE_CONNECT_API_KEY }}' > api_key.json  # Save API key
-        fastlane pilot upload --ipa ./build/ios/ipa/Runner.ipa --api_key api_key.json --app_identifier ${{ secrets.APP_IDENTIFIER }} --skip_waiting_for_build_processing --verbose
-      env:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-      
-
-    # - name: Build and Upload to App Store
+    # - name: Set up fastlane
     #   run: |
-    #     fastlane gym --scheme Runner --export_method app-store
-    #     echo '${{ secrets.APP_STORE_CONNECT_API_KEY }}' > api_key.json
-    #     fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force --api_key api_key.json --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
-    #   env:
-    #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-    #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-    #     FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+    #     gem install fastlane
+    #     fastlane --version
+
+    # - name: Debug API Key Path
+    #   run: |
+    #     echo "API Key Path: $HOME/ios/AuthKey.json"
+
+    # - name: Update Fastlane and Xcode tools
+    #   run: |
+    #     sudo gem install fastlane --no-document
+    #     sudo xcode-select --switch /Applications/Xcode.app
+
+    - name: Authenticate Fastlane with API Key
+      run: |
+        fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git \
+          --api_key_path "$HOME/ios/AuthKey.p8" \
+          --api_key_id "${{ secrets.APP_STORE_CONNECT_KEY_ID }}" \
+          --api_issuer "${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}"
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        
+    - name: Build and Upload to App Store
+      run: |
+        export XCODE_XCCONFIG_FILE=""
+        fastlane run update_code_signing_settings path:ios/Runner.xcodeproj use_automatic_signing:true
+        fastlane sigh --app_identifier ${{ secrets.APP_IDENTIFIER }}
+        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --verbose 
+        # || true  Add verbose flag and allow failure
+        ls -l ./build/ios/ipa/
+
+        # Check if the .ipa file exists
+        if [ -f ./build/ios/ipa/Runner.ipa ]; then
+          echo "IPA file exists!"
+        else
+          echo "IPA file not found!"
+          exit 1
+        fi
+
+        fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force \
+          --api_key_path "$HOME/ios/AuthKey.p8" \
+          --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
 
     - name: Clean up certificate repo
       run: rm -rf ./kode_app_cert_repo
