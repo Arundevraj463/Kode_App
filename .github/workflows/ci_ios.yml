@@ -185,14 +185,17 @@ jobs:
 
     - name: Authenticate Fastlane with API Key
       run: |
+        export FASTLANE_USER="${{ secrets.APPLE_ID }}"
+        export FASTLANE_PASSWORD="${{ secrets.APPLE_PASSWORD }}"
+        export APP_STORE_CONNECT_API_KEY="$HOME/ios/AuthKey.p8"
+
         fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git \
-          --api_key_path "$HOME/ios/AuthKey.p8" \
+          --api_key_path "$APP_STORE_CONNECT_API_KEY" \
           --api_key_id "${{ secrets.APP_STORE_CONNECT_KEY_ID }}" \
-          --api_issuer "${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}"
+          --api_issuer "${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}" \
+          --readonly
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         
     - name: Build and Upload to App Store
       run: |
