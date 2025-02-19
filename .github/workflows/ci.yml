@@ -252,6 +252,11 @@ jobs:
       run: |
         echo "API Key Path: $HOME/ios/AuthKey.json"
 
+    - name: Update Fastlane and Xcode tools
+      run: |
+        sudo gem install fastlane --no-document
+        sudo xcode-select --switch /Applications/Xcode.app
+
     - name: Fastlane match (Sign iOS app)
       run: fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git --api_key_path "$HOME/ios/AuthKey.json" --app_identifier ${{ secrets.APP_IDENTIFIER }} --readonly false
       env:
@@ -264,7 +269,10 @@ jobs:
     - name: Build and Upload to App Store
       run: |
         export XCODE_XCCONFIG_FILE=""
-        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --verbose # || true  Add verbose flag and allow failure
+        fastlane run update_code_signing_settings path:ios/Runner.xcodeproj use_automatic_signing:true
+        fastlane sigh --app_identifier ${{ secrets.APP_IDENTIFIER }}
+        fastlane gym --project ./ios/Runner.xcodeproj --scheme Runner --export_method app-store --verbose 
+        # || true  Add verbose flag and allow failure
         ls -l ./build/ios/ipa/
 
         # Check if the .ipa file exists
