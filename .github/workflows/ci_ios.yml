@@ -190,9 +190,7 @@ jobs:
         export APP_STORE_CONNECT_API_KEY="$HOME/ios/AuthKey.p8"
 
         fastlane match appstore --git_url git@github.com:Arundevraj463/Kode_App.git \
-          --api_key_path "$APP_STORE_CONNECT_API_KEY" \
-          --api_key_id "${{ secrets.APP_STORE_CONNECT_KEY_ID }}" \
-          --api_issuer "${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}" \
+          --api-key "$APP_STORE_CONNECT_API_KEY" \
           --readonly
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
@@ -215,7 +213,7 @@ jobs:
         fi
 
         fastlane deliver --ipa ./build/ios/ipa/Runner.ipa --skip_screenshots --skip_metadata --force \
-          --api_key_path "$HOME/ios/AuthKey.p8" \
+          --api-key "$APP_STORE_CONNECT_API_KEY" \
           --app_identifier ${{ secrets.APP_IDENTIFIER }} --verbose
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
